@@ -30,3 +30,5 @@ WHERE id = 1;                     -- Reemplaza 1 con el id del cliente que quier
 -- Seleccionar un cliente por id
 SELECT * FROM clients
 WHERE id = 1;  -- Reemplaza 1 con el id del cliente que quieres consultar
+
+

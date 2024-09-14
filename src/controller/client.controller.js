@@ -1,5 +1,5 @@
 const { pool } = require("../database/db");
-const { createClientService, getClientByName, getClientService, updateClientService } = require("../service/client.service");
+const { createClientService, getClientByName, getClientService, updateClientService, getClientById, deleteClientService } = require("../service/client.service");
 
 /* const getClient = async () => {
     getClientService()
@@ -75,8 +75,27 @@ const updateClient = async (req, res) => {
             message: "Error en la actualizacion del cliente"
         })
     }
-
-
+}
+//delete client
+const deleteClient = async (req, res) => {
+    const id = parseInt(req.params.id)
+    const clientFound = await getClientById(id)
+    console.log(clientFound)
+    if (clientFound.length === 0) {
+        console.log('vacio')
+        return res.status(404).json({
+            message: "No se encontro un cliente con ese id, no se puede eliminar"
+        })
+    }
+    try {
+        //hacemos la consulta para eliminar un cliente
+        const result = await deleteClientService(id)
+        //enviar respuesta exitosa
+        res.status(204).json(result)
+    } catch (error) {
+        console.error('Error al eliminar un cliente', error)
+        res.status(500).json({ message: "Error en la eliminacion de client en la base de datos" })
+    }
 }
 
-module.exports = { createClient, getClient, updateClient }
+module.exports = { createClient, getClient, updateClient, deleteClient }

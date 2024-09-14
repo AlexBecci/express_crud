@@ -9,6 +9,17 @@ const getClientService = async (req, res) => {
         res.status(500).json({ message: "Error en la consulta a la base de datos" })
     }
 }
+//get by id
+
+const getClientById = async (id) => {
+    try {
+        const [row] = await pool.query('SELECT * FROM clients WHERE id = ?', [id])
+        return row
+    } catch (error) {
+        console.error("Error en la consulta a la base de datos: ", error);
+        throw new Error("Error en la consulta a la base de datos");
+    }
+}
 
 const getClientByName = async (email) => {
     try {
@@ -50,7 +61,19 @@ const updateClientService = async (id, first_name, last_name, phone_number, emai
         throw error
     }
 }
+//delete client
+const deleteClientService = async (id) => {
+    try {
+        //Ejecutar la consulta 
+        const [row] = await pool.query(`DELETE FROM clients WHERE id = ${id}`)
+        console.log(row)
+        return row
+    } catch (error) {
+        console.error("Error al eliminar el cliente ", error)
+        throw error
+    }
+}
 
 
 
-module.exports = { getClientService, createClientService, getClientByName, updateClientService }
+module.exports = { getClientService, createClientService, getClientByName, updateClientService, deleteClientService, getClientById }

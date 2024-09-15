@@ -1,4 +1,3 @@
-const { pool } = require("../database/db");
 const { getDriversService, getDriverByEmail, createDriverService, updateDriverService, getDriverById, deleteDriverService } = require("../service/driver.service");
 
 //get drivers

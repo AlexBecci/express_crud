@@ -47,8 +47,7 @@ const createClientService = async (first_name, last_name, phone_number, email) =
     }
 }
 //update
-
-const updateClientService = async (id, first_name, last_name, phone_number, email) => {
+async function updateClientService(id, first_name, last_name, phone_number, email) {
     try {
         //Ejecutar la consulta de actualizacion
         const [result] = await pool.query(

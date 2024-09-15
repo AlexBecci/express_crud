@@ -26,7 +26,7 @@ const createClient = async (req, res) => {
     //validamos que se hayan enviado todos los campos requeridos
     if (!first_name || !last_name || phone_number === undefined || !email) {
         return res.status(400).json({
-            message: "TODOS LOS CAMPOS (firs_name, last_name, phone_number,email) SON REQUERIDOS"
+            message: "TODOS LOS CAMPOS (first_name, last_name, phone_number,email) SON REQUERIDOS"
         })
     }
     try {
@@ -54,7 +54,6 @@ const updateClient = async (req, res) => {
         })
     }
     try {
-
         //llamamos al servicio para actualizar el cliente
         const result = await updateClientService(clientId, first_name, last_name, phone_number, email)
 

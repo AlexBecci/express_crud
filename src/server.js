@@ -7,6 +7,7 @@ const { testConnection } = require('./database/db')
 
 //llamando a las routes
 const ClientRoutes = require('./routes/client.routes')
+const DriverRoutes   = require('./routes/driver.routes')
 
 //settings
 
@@ -14,7 +15,7 @@ const ClientRoutes = require('./routes/client.routes')
 app.use(express.json())
 app.use(morgan('dev'))
 //routes
-app.use(ClientRoutes)
+app.use(ClientRoutes,DriverRoutes)
 
 //publics
 startServer()

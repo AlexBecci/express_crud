@@ -12,7 +12,7 @@ async function getVehiclesService(req, res) {
 //getVehicleById
 async function getVehicleById(id) {
     try {
-        const [rows] = await pool.query('SELECT id FROM  vehicles WHERE id=?', [id])
+        const [rows] = await pool.query('SELECT * FROM  vehicles WHERE id=?', [id])
         return rows
     } catch (error) {
         console.error("Error en la consulta a la base de datos: ", error);
@@ -65,5 +65,5 @@ async function deleteVehicleService(id) {
 }
 
 
-module.exports = { getVehiclesService, createVehicleService, getVehicleByLicensePlate, updateVehicleService, getVehicleById,deleteVehicleService }
+module.exports = { getVehiclesService, createVehicleService, getVehicleByLicensePlate, updateVehicleService, getVehicleById, deleteVehicleService }
 

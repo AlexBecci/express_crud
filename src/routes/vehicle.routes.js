@@ -12,7 +12,7 @@ router.post('/vehicles', createVehicle)
 //put 
 router.put('/vehicles/:id', updateVehicle)
 
-//delte
+//delete
 router.delete('/vehicles/:id', deleteVehicle)
 
 

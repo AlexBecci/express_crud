@@ -14,6 +14,6 @@ router.post('/drivers', createDriver)
 router.put('/drivers/:id', updateDriver)
 
 //delete
-router.delete('/drivers/:id',deleteDriver)
+router.delete('/drivers/:id', deleteDriver)
 
 module.exports = router

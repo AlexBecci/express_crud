@@ -13,3 +13,7 @@ CREATE TABLE clients (
 UPDATE clients
 SET phone_number = '9876543210', email = 'new.email@example.com'
 WHERE id = 1;
+
+--delete
+DELETE FROM table_name
+WHERE column_name = value;

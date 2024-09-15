@@ -9,6 +9,7 @@ const { testConnection } = require('./database/db')
 const ClientRoutes = require('./routes/client.routes')
 const DriverRoutes = require('./routes/driver.routes')
 const VehicleRoutes = require('./routes/vehicle.routes')
+const TripRoutes = require('./routes/trip.routes')
 
 //settings
 
@@ -16,7 +17,7 @@ const VehicleRoutes = require('./routes/vehicle.routes')
 app.use(express.json())
 app.use(morgan('dev'))
 //routes
-app.use(ClientRoutes, DriverRoutes, VehicleRoutes)
+app.use(ClientRoutes, DriverRoutes, VehicleRoutes, TripRoutes)
 
 //publics
 startServer()

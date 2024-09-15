@@ -89,5 +89,5 @@ const deleteDriver = async (req, res) => {
     }
 }
 
-module.exports = { getDrivers, createDriver, updateDriver,deleteDriver }
+module.exports = { getDrivers, createDriver, updateDriver, deleteDriver }
 

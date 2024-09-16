@@ -21,8 +21,9 @@ async function createVehicle(req, res) {
     }
     try {
         const result = await createVehicleService(license_plate, model, make, year, driver_id)
+        console.log(result)
         //return exitosa
-        res.status(201).json({ message: `Vehiculo creado con exito ${result}` })
+        res.status(201).json({ message: `Vehiculo creado con exito` })
     } catch (error) {
         console.error("Error en la creacion del vehiculo: ", error)
         res.status(500).json({ message: "Error en la creacion del vehiculo en la base de datos" })

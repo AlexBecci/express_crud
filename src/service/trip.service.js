@@ -3,7 +3,7 @@ const { pool } = require('../database/db')
 
 async function getTripsService(req, res) {
     try {
-        const [rows] = await pool.query('SELECT * FROM trips')
+        const [rows] = await pool.query('SELECT * FROM trips ORDER by start_time DESC')
         res.json(rows)
     } catch (error) {
         res.status(500).json({ message: 'Error en la consulta a la base de datos' })
@@ -39,8 +39,8 @@ async function updateTripService(id, end_time, distance, fare) {
         const [result] = await pool.query('UPDATE trips SET end_time=?,distance=?,fare=? WHERE id=?', [end_time, distance, fare, id])
         return result
     } catch (error) {
-        console.error("Error en la actualizacion del viaje: ", error)
-        res.status(500).json({ message: "Error en la actualizacion del viaje en la base de datos" })
+        console.error("Error en la consulta a la base de datos: ", error);
+        throw new Error("Error en la consulta a la base de datos");
     }
 }
 

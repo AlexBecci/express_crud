@@ -28,7 +28,7 @@ async function createTripService(client_id, vehicle_id, start_time, distance, fa
         //retornar el resultado para el controllador
         return result
     } catch (error) {
-        console.error("Error en la consulta a la base de datos: ", error);
+            console.error("Error en la consulta a la base de datos: ", error);
         throw new Error("Error en la consulta a la base de datos");
     }
 }

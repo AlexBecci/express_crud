@@ -36,7 +36,7 @@ async function updatePayment(req, res) {
     }
     try {
         //le opegamos al service
-        const result = await updatePaymentService(paymentId, trip_id, amount,payment_date)
+        const result = await updatePaymentService(paymentId, trip_id, amount, payment_date)
         if (result.affectedRows === 0) {
             return res.status(400).json({
                 message: "Pago no encontrado"

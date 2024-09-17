@@ -10,8 +10,7 @@ const pool = mysql.createPool({
     password: process.env.DB_PASSWORD || '1234',
     database: process.env.DB_NAME || 'test',
     port: process.env.DB_PORT || 3306
-    /* waitForConnections:true, */
-})
+});
 
 //conecta a la base de datos
 //funcion

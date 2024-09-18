@@ -38,6 +38,9 @@ app.use('/api', TripRoutes)
 app.use('/api', PaymentRoutes)
 
 startServer()
+app.get('/', (req, res) => {
+    res.send('Bienvenido a la API');
+});
 
 //publics
 

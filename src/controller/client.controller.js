@@ -6,6 +6,7 @@ const { createClientService, getClientByName, getClientService, updateClientServ
 } */
 
 const getClient = async (req, res) => {
+    console.log()
     const result = getClientService(req, res)
     return result
 }

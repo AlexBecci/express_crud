@@ -13,10 +13,10 @@ const TripRoutes = require('./routes/trip.routes')
 const PaymentRoutes = require('./routes/payment.routes')
 //cors modificado
 const corsOptions = {
-   /*  origin: process.env.PORT_FRONT, */  // Permite solicitudes solo desde este origen
+    /*  origin: process.env.PORT_FRONT, */  // Permite solicitudes solo desde este origen
     origin: 'http://localhost:5173',  // Especifica directamente la URL
     methods: ['GET', 'POST', 'PUT', 'DELETE'],  // Métodos permitidos
-    allowedHeaders: ['Content-Type', 'Authorization'] , // Cabeceras permitidas,
+    allowedHeaders: ['Content-Type', 'Authorization'], // Cabeceras permitidas,
     credentials: true, // Permitir cookies y credenciales
 }
 //settings
@@ -37,8 +37,9 @@ app.use('/api', VehicleRoutes)
 app.use('/api', TripRoutes)
 app.use('/api', PaymentRoutes)
 
-//publics
 startServer()
+
+//publics
 
 //probar la conexion y luego levantar el servidor
 async function startServer() {

@@ -2,10 +2,13 @@ const { pool } = require("../database/db");
 
 const getClientService = async (req, res) => {
     /* res.send('Obteniendo todos los clientes') */
+    console.log('q pasa aca?')
     try {
         const [rows] = await pool.query('SELECT * FROM clients');
+        console.log(rows)
         res.json(rows)
     } catch (error) {
+        console.log(error)
         res.status(500).json({ message: "Error en la consulta a la base de datos" })
     }
 }

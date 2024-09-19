@@ -1,7 +1,9 @@
 const express = require('express')
 const morgan = require('morgan')
 const app = express()
+const path = require('path')
 const cors = require('cors')
+
 //importamos la conexion a la  base de datos
 const { testConnection } = require('./database/db')
 
@@ -27,6 +29,10 @@ app.use(morgan('dev'))
 // Configuración de CORS
 
 app.use(cors(corsOptions))  // Usa el middleware cors
+
+//server static files from public directory
+app.use(express.static('src/public'))
+
 //routes
 /* app.use(ClientRoutes, DriverRoutes, VehicleRoutes, TripRoutes, PaymentRoutes)
  */
@@ -37,12 +43,13 @@ app.use('/api', VehicleRoutes)
 app.use('/api', TripRoutes)
 app.use('/api', PaymentRoutes)
 
-startServer()
-app.get('/', (req, res) => {
-    res.send('Bienvenido a la API');
+//publics
+// For any routes not handled by API, serve the React app
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-//publics
+startServer()
 
 //probar la conexion y luego levantar el servidor
 async function startServer() {
@@ -51,7 +58,7 @@ async function startServer() {
         await testConnection();
         //si la conexion es exitosa, iniciar el servidor
         app.listen(3000)
-        console.log('SERVER ON PORT --->3000')
+        console.log('SERVER ON')
     } catch (error) {
         //manejar errores de conexion
         console.error("Error en la conexion a la base de datos. No se puede levantar el servidor", error)

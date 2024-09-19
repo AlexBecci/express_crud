@@ -2,7 +2,6 @@ const { pool } = require("../database/db");
 
 const getClientService = async (req, res) => {
     /* res.send('Obteniendo todos los clientes') */
-    console.log('q pasa aca?')
     try {
         const [rows] = await pool.query('SELECT * FROM clients');
         console.log(rows)
@@ -46,7 +45,7 @@ const createClientService = async (first_name, last_name, phone_number, email) =
         return { id: result.insertId, message: "Cliente creado con éxito" };
     } catch (error) {
         console.error("Error en la creacion del cliente: ", error)
-        res.status(500).json({ message: "Error en la creacion de client en la base de datos" })
+        throw new Error("Error en la consulta a la base de datos");
     }
 }
 //update
@@ -60,7 +59,7 @@ async function updateClientService(id, first_name, last_name, phone_number, emai
         return result
     } catch (error) {
         console.error("Error en la actualizacion del cliente: ", error)
-        throw error
+        throw new Error("Error en la consulta a la base de datos");
     }
 }
 //delete client
@@ -72,7 +71,7 @@ const deleteClientService = async (id) => {
         return row
     } catch (error) {
         console.error("Error al eliminar el cliente ", error)
-        throw error
+        throw new Error("Error en la consulta a la base de datos");
     }
 }
 

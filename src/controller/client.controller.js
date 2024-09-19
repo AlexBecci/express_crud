@@ -1,9 +1,4 @@
-const { pool } = require("../database/db");
 const { createClientService, getClientByName, getClientService, updateClientService, getClientById, deleteClientService } = require("../service/client.service");
-
-/* const getClient = async () => {
-    getClientService()
-} */
 
 const getClient = async (req, res) => {
     console.log()

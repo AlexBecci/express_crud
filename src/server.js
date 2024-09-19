@@ -13,6 +13,8 @@ const DriverRoutes = require('./routes/driver.routes')
 const VehicleRoutes = require('./routes/vehicle.routes')
 const TripRoutes = require('./routes/trip.routes')
 const PaymentRoutes = require('./routes/payment.routes')
+const UserRoutes = require('./routes/user.routes')
+const AuthRoutes = require('./routes/auth.routes')
 //cors modificado
 const corsOptions = {
     /*  origin: process.env.PORT_FRONT, */  // Permite solicitudes solo desde este origen
@@ -37,11 +39,13 @@ app.use(express.static('src/public'))
 /* app.use(ClientRoutes, DriverRoutes, VehicleRoutes, TripRoutes, PaymentRoutes)
  */
 // Montar rutas con el prefijo /api
+app.use('/api', AuthRoutes)
 app.use('/api', ClientRoutes)
 app.use('/api', DriverRoutes)
 app.use('/api', VehicleRoutes)
 app.use('/api', TripRoutes)
 app.use('/api', PaymentRoutes)
+app.use('/api', UserRoutes)
 
 //publics
 // For any routes not handled by API, serve the React app

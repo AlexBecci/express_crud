@@ -1,4 +1,6 @@
 const { getDriversService, getDriverByEmail, createDriverService, updateDriverService, getDriverById, deleteDriverService } = require("../service/driver.service");
+const jwt = require('jsonwebtoken')
+const { SECRET_KEY } = require('../config')
 
 //get drivers
 const getDrivers = async (req, res) => {
@@ -26,8 +28,17 @@ const createDriver = async (req, res) => {
         })
     }
     try {
+        // Obtener el token desde la cookie
+        const token = req.cookies.authToken;
+        console.log(token)
+        if (!token) {
+            return res.status(401).json({ message: "No está autenticado" });
+        }
+        // Decodificar el token para obtener el user_id
+        const decoded = jwt.verify(token, SECRET_KEY); // Reemplaza 'process.env.SECRET_KEY' con tu clave secreta
+        const user_id = decoded.id;
         //ejectuar la consulta en la base 
-        const result = await createDriverService(first_name, last_name, license_number, phone_number, email)
+        const result = await createDriverService(first_name, last_name, license_number, phone_number, email,user_id)
         //return res exitosa
         res.status(201).json(result)
 

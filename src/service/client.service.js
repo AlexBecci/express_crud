@@ -33,19 +33,19 @@ const getClientByName = async (email) => {
     }
 }
 
-const createClientService = async (first_name, last_name, phone_number, email) => {
+const createClientService = async (first_name, last_name, phone_number, email,user_id) => {
     try {
         //ejecutar la consulta para insertar los datos
         //aca entraria el servicio
         const result = await pool.query(
-            'INSERT INTO clients (first_name, last_name, phone_number,email) VALUES (?,?,?,?)',
-            [first_name, last_name, phone_number, email]
+            'INSERT INTO clients (first_name, last_name, phone_number,email,user_id) VALUES (?,?,?,?,?)',
+            [first_name, last_name, phone_number, email,user_id]
         )
         // Retornar el resultado para que el controlador pueda manejar la respuesta
         return { id: result.insertId, message: "Cliente creado con éxito" };
     } catch (error) {
         console.error("Error en la creacion del cliente: ", error)
-        throw new Error("Error en la consulta a la base de datos");
+        throw new Error("Error en la consulta a la base de datos");F
     }
 }
 //update

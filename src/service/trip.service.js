@@ -22,13 +22,13 @@ async function getTripById(id) {
 }
 
 //create trip
-async function createTripService(client_id, vehicle_id, start_time, distance, fare) {
+async function createTripService(client_id, vehicle_id, start_time, distance, fare, driver_id, user_id) {
     try {
-        const result = await pool.query('INSERT INTO trips (client_id,vehicle_id,start_time,distance,fare) VALUES (?,?,?,?,?)', [client_id, vehicle_id, start_time, distance, fare])
+        const result = await pool.query('INSERT INTO trips (client_id,vehicle_id,start_time,distance,fare,driver_id,user_id) VALUES (?,?,?,?,?,?,?)', [client_id, vehicle_id, start_time, distance, fare, driver_id, user_id])
         //retornar el resultado para el controllador
         return result
     } catch (error) {
-            console.error("Error en la consulta a la base de datos: ", error);
+        console.error("Error en la consulta a la base de datos: ", error);
         throw new Error("Error en la consulta a la base de datos");
     }
 }

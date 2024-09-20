@@ -1,6 +1,7 @@
 const { createUserService, getUserByUsername, getUserById, getUsersService } = require('../service/user.service')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken');
+const { SECRET_KEY, NODE_ENV } = require('../config');
 
 async function register(req, res) {
     const { username, password, first_name, last_name } = req.body
@@ -30,6 +31,16 @@ async function register(req, res) {
 
     }
 }
+//LOGOUT
+function logout(req, res) {
+    res.clearCookie('authToken', {
+        httpOnly: true,
+        secure: NODE_ENV === 'production',
+        sameSite: 'Strict'
+    })
+    res.status(200).json({ message: 'Logout successful' });
+}
+
 
 async function login(req, res) {
     const { username, password } = req.body
@@ -48,24 +59,49 @@ async function login(req, res) {
             return res.status(404).json({ message: "No se encontro usuario con esas credenciales" })
         }
         console.log('econtro', userFound[0], 'contra', userFound[0].password)
+        //implementacion con cookies
+        const isMatch = await comparePasswords(password, userFound[0].password)
+        if (!isMatch) {
+            return res.status(401).json({ error: 'Invalid username or password' });
+        }
+        //generamos el token
+        const token = jwt.sign({ id: userFound[0].id, username: userFound[0].username }, SECRET_KEY, { expiresIn: '4h' })
+        //variable de tiempo
+        const fourHoursInMs = 4 * 3600000; // 4 horas en milisegundos
+        //configurar opciones de la cookie
+        const cookieOptions = {
+            httpOnly: true,
+            secure: NODE_ENV === 'production',
+            sameSite: 'Strict',
+            maxAge: fourHoursInMs
+        }
+        //enviar la cookie con el token
+        res.cookie('authToken', token, cookieOptions)
+
+        res.status(200).json({ message: 'Login successful', token: token, cookie: cookieOptions });
         // Comparar la contraseña proporcionada con el hash almacenado
-        bcrypt.compare(password, userFound[0].password, (err, isMatch) => {
-            if (err) {
-                return res.status(500).json({ error: 'Error comparing passwords' });
-            }
-            if (isMatch) {
-                // Aquí podrías generar un token de sesión o JWT
-                const token = jwt.sign({ id: userFound.id, username: userFound.username }, 'your_secret_key', { expiresIn: '1h' })
-                res.status(200).json({ message: 'Login successful', token });
-            } else {
-                res.status(401).json({ error: 'Invalid username or password' });
-            }
-        });
+        /*   bcrypt.compare(password, userFound[0].password, (err, isMatch) => {
+              if (err) {
+                  return res.status(500).json({ error: 'Error comparing passwords' });
+              }
+              if (isMatch) {
+                  // Aquí podrías generar un token de sesión o JWT
+                  const token = jwt.sign({ id: userFound.id, username: userFound.username }, SECRET_KEY, { expiresIn: '1h' })
+                  res.status(200).json({ message: 'Login successful', token });
+              } else {
+                  res.status(401).json({ error: 'Invalid username or password' });
+              }
+          }); */
     } catch (error) {
         console.log(error)
+        res.status(500).json({ error: 'Internal Server Error' });
     }
 }
-
+//comparar la contrasena con el hash almacenado
+async function comparePasswords(password, nativePassword) {
+    const boolean = await bcrypt.compare(password, nativePassword)
+    return boolean
+}
 async function usernameIsValid(username) {
     try {
         const result = await getUserByUsername(username);
@@ -80,7 +116,27 @@ async function usernameIsValid(username) {
     }
 }
 
+
+
 function authenticateToken(req, res, next) {
+    //leer el token de las cookies
+    const token = req.cookies.authToken;
+    if (!token) {
+        return res.status(401).json({ message: 'No token provided' });
+    }
+    //verifar token
+    jwt.verify(token, SECRET_KEY, (err, user) => {
+        if (err) {
+            return res.status(403).json({ message: 'Invalid token' });
+        }
+        // Adjuntar el usuario al objeto de request
+        req.user = user;
+        next();
+    })
+}
+
+//funcion vieja
+/* function authenticateToken(req, res, next) {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
     console.log('token: ', token, 'header', authHeader)
@@ -95,9 +151,10 @@ function authenticateToken(req, res, next) {
         req.user = user;
         next()
     })
-}
+} */
 module.exports = {
     register,
     login,
-    authenticateToken
+    authenticateToken,
+    logout
 }

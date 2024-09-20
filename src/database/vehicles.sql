@@ -1,10 +1,12 @@
 CREATE TABLE vehicles (
     id INT AUTO_INCREMENT PRIMARY KEY,
+    status_vehicle VARCHAR(12) NOT NULL,
     license_plate VARCHAR(20) UNIQUE NOT NULL,
+    user_id INT NOT NULL,
     model VARCHAR(50) NOT NULL,
     make VARCHAR(50) NOT NULL,
     year INT NOT NULL,
-    driver_id INT,
+    driver_id INT NOT NULL,
     FOREIGN KEY (driver_id) REFERENCES drivers(id),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     update_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

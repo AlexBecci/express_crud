@@ -1,5 +1,6 @@
 const { getPaymentsService, createPaymentService, updatePaymentService, getPaymentService, deletePaymentService } = require("../service/payment.service")
-
+const { SECRET_KEY } = require('../config')
+const jwt = require('jsonwebtoken')
 
 //get vehicles
 async function getPayments(req, res) {
@@ -9,14 +10,25 @@ async function getPayments(req, res) {
 
 //post
 async function createPayment(req, res) {
-    const { trip_id, amount, payment_date } = req.body
-    if (trip_id === undefined || amount === undefined || !payment_date) {
+    const { trip_id, amount, payment_date, payment_method } = req.body
+    if (trip_id === undefined || amount === undefined || !payment_date || !payment_method) {
         return res.status(400).json({
-            message: "TODOS LOS CAMPOS (trip_id,amount,payment_date) SON REQUERIDOS"
+            message: "TODOS LOS CAMPOS (trip_id,amount,payment_date,payment_method) SON REQUERIDOS"
         })
     }
     try {
-        await createPaymentService(trip_id, amount, payment_date)
+        // Obtener el token desde la cookie
+        const token = req.cookies.authToken;
+        console.log(token)
+        if (!token) {
+            return res.status(401).json({ message: "No está autenticado" });
+        }
+        // Decodificar el token para obtener el user_id
+        const decoded = jwt.verify(token, SECRET_KEY); // Reemplaza 'process.env.SECRET_KEY' con tu clave secreta
+        const user_id = decoded.id;
+        //ejecutar la consulta para insertar los datos
+        //aca entraria el servicio
+        await createPaymentService(trip_id, amount, payment_date, user_id, payment_method)
         //return exitosa
         res.status(201).json({ message: `Pago creado con exito ` })
     } catch (error) {

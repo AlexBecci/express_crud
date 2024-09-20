@@ -1,4 +1,7 @@
 const { getVehiclesService, getVehicleByLicensePlate, createVehicleService, updateVehicleService, getVehicleById, deleteVehicleService } = require('../service/vehicle.service')
+const { SECRET_KEY } = require('../config')
+const jwt = require('jsonwebtoken')
+
 //get vehicles
 async function getVehicles(req, res) {
     const result = await getVehiclesService(req, res)
@@ -13,14 +16,24 @@ async function createVehicle(req, res) {
         return res.status(409).json({ message: "EL valor de la patente ya esta en uso" })
     }
     /* license_plate, model, make, year, drive_id */
-    const { license_plate, model, make, year, driver_id } = req.body
-    if (!license_plate || !model || !make || year === undefined || driver_id === undefined) {
+    const { license_plate, model, make, year, driver_id, status_vehicle } = req.body
+    if (!license_plate || !model || !make || !status_vehicle || year === undefined || driver_id === undefined) {
         return res.status(400).json({
             message: "TODOS LOS CAMPOS (license_plate, model,make, year,driver_id) SON REQUERIDOS"
         })
     }
     try {
-        const result = await createVehicleService(license_plate, model, make, year, driver_id)
+        // Obtener el token desde la cookie
+        const token = req.cookies.authToken;
+        console.log(token)
+        if (!token) {
+            return res.status(401).json({ message: "No está autenticado" });
+        }
+        // Decodificar el token para obtener el user_id
+        const decoded = jwt.verify(token, SECRET_KEY); // Reemplaza 'process.env.SECRET_KEY' con tu clave secreta
+        const user_id = decoded.id;
+
+        const result = await createVehicleService(license_plate, model, make, year, driver_id, user_id, status_vehicle)
         console.log(result)
         //return exitosa
         res.status(201).json({ message: `Vehiculo creado con exito` })
@@ -79,7 +92,6 @@ async function deleteVehicle(req, res) {
         console.error('Error al eliminar un vehiculo', error)
         res.status(500).json({ message: "Error en la eliminacion del vehiculo en la base de datos" })
     }
-
 }
 
 

@@ -3,7 +3,8 @@ const morgan = require('morgan')
 const app = express()
 const path = require('path')
 const cors = require('cors')
-
+//requerimos la libreria
+const cookieParser = require('cookie-parser')
 //importamos la conexion a la  base de datos
 const { testConnection } = require('./database/db')
 
@@ -15,6 +16,7 @@ const TripRoutes = require('./routes/trip.routes')
 const PaymentRoutes = require('./routes/payment.routes')
 const UserRoutes = require('./routes/user.routes')
 const AuthRoutes = require('./routes/auth.routes')
+const { authenticateToken } = require('./controller/auth.controller')
 //cors modificado
 const corsOptions = {
     /*  origin: process.env.PORT_FRONT, */  // Permite solicitudes solo desde este origen
@@ -27,6 +29,7 @@ const corsOptions = {
 
 //middlewares
 app.use(express.json())
+app.use(cookieParser()); // Añadir middleware de cookie-parser
 app.use(morgan('dev'))
 // Configuración de CORS
 
@@ -38,14 +41,15 @@ app.use(express.static('src/public'))
 //routes
 /* app.use(ClientRoutes, DriverRoutes, VehicleRoutes, TripRoutes, PaymentRoutes)
  */
+
 // Montar rutas con el prefijo /api
 app.use('/api', AuthRoutes)
-app.use('/api', ClientRoutes)
-app.use('/api', DriverRoutes)
-app.use('/api', VehicleRoutes)
-app.use('/api', TripRoutes)
-app.use('/api', PaymentRoutes)
-app.use('/api', UserRoutes)
+app.use('/api', authenticateToken, ClientRoutes)
+app.use('/api', authenticateToken, DriverRoutes)
+app.use('/api', authenticateToken, VehicleRoutes)
+app.use('/api', authenticateToken, TripRoutes)
+app.use('/api', authenticateToken, PaymentRoutes)
+app.use('/api', authenticateToken, UserRoutes)
 
 //publics
 // For any routes not handled by API, serve the React app

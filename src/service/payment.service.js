@@ -20,9 +20,9 @@ async function getPaymentService(id) {
     }
 }
 
-async function createPaymentService(trip_id, amount, payment_date) {
+async function createPaymentService(trip_id, amount, payment_date, user_id,payment_method) {
     try {
-        const result = await pool.query('INSERT INTO payments (trip_id,amount,payment_date) VALUES (?,?,?)', [trip_id, amount, payment_date])
+        const result = await pool.query('INSERT INTO payments (trip_id,amount,payment_date,user_id,payment_method) VALUES (?,?,?,?,?)', [trip_id, amount, payment_date, user_id,payment_method])
         return result
     } catch (error) {
         console.error("Error en la consulta a la base de datos: ", error);

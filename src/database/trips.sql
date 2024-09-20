@@ -1,7 +1,9 @@
 CREATE TABLE trips (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    client_id INT,
-    vehicle_id INT,
+    client_id INT NOT NULL,
+    vehicle_id INT NOT NULL,
+    driver_id INT NOT NULL,
+    user_id INT NOT NULL,
     start_time TIMESTAMP NOT NULL,
     end_time TIMESTAMP,
     distance DECIMAL(10, 2),

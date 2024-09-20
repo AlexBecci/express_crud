@@ -1,5 +1,6 @@
 const { createClientService, getClientByName, getClientService, updateClientService, getClientById, deleteClientService } = require("../service/client.service");
-
+const { SECRET_KEY } = require('../config')
+const jwt = require('jsonwebtoken')
 const getClient = async (req, res) => {
     console.log()
     const result = getClientService(req, res)
@@ -26,9 +27,18 @@ const createClient = async (req, res) => {
         })
     }
     try {
+        // Obtener el token desde la cookie
+        const token = req.cookies.authToken;
+        console.log(token)
+        if (!token) {
+            return res.status(401).json({ message: "No está autenticado" });
+        }
+        // Decodificar el token para obtener el user_id
+        const decoded = jwt.verify(token, SECRET_KEY); // Reemplaza 'process.env.SECRET_KEY' con tu clave secreta
+        const user_id = decoded.id;
         //ejecutar la consulta para insertar los datos
         //aca entraria el servicio
-        const result = await createClientService(first_name, last_name, phone_number, email)
+        const result = await createClientService(first_name, last_name, phone_number, email, user_id)
         // Enviar respuesta exitosa con el id del nuevo cliente
         res.status(201).json(result);
 

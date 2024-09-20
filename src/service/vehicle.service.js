@@ -30,14 +30,14 @@ async function getVehicleByLicensePlate(license_plate) {
     }
 }
 
-async function createVehicleService(license_plate, model, make, year, driver_id) {
+async function createVehicleService(license_plate, model, make, year, driver_id, user_id, status_vehicle) {
     try {
-        const result = await pool.query('INSERT INTO vehicles (license_plate,model,make,year,driver_id) VALUES (?,?,?,?,?)', [license_plate, model, make, year, driver_id])
+        const result = await pool.query('INSERT INTO vehicles (license_plate,model,make,year,driver_id,user_id,status_vehicle) VALUES (?,?,?,?,?,?,?)', [license_plate, model, make, year, driver_id, user_id, status_vehicle])
         //retorna el resultado para que ell controlador pueda manejar la respuesta
         return result
     } catch (error) {
-        console.error("Error en la creacion del vehiculo: ", error)
-        res.status(500).json({ message: "Error en la creacion de un vehiculo en la base de datos" })
+        console.error("Error en la consulta a la base de datos: ", error);
+        throw new Error("Error en la consulta a la base de datos");
     }
 }
 
@@ -48,8 +48,8 @@ async function updateVehicleService(id, model, make, year) {
         const [result] = await pool.query('UPDATE vehicles SET model=?,make=?,year=? WHERE id=?', [model, make, year, id])
         return result
     } catch (error) {
-        console.error("Error en la actualizacion del vehiculo: ", error)
-        res.status(500).json({ message: "Error en la actualizacion de un vehiculo en la base de datos" })
+        console.error("Error en la consulta a la base de datos: ", error);
+        throw new Error("Error en la consulta a la base de datos");
     }
 }
 
@@ -59,8 +59,7 @@ async function deleteVehicleService(id) {
         const [row] = await pool.query(`DELETE FROM vehicles WHERE id = ${id}`)
         return row
     } catch (error) {
-        console.error("Error en la consulta a la base de datos: ", error);
-        throw new Error("Error en la consulta a la base de datos");
+
     }
 }
 
